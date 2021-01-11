@@ -66,8 +66,8 @@ Gaussian = normal_distribution(mean,standard_dev,error_data)
 Gaussian_scaled = Gaussian * 14335000 * (288700/441600)               #Scaling is arbitrary to fit hist magnitude
 plt.plot(error_data, Gaussian_scaled,'rx', markersize=2)
 plt.hist(error_data, bins=500)
-plt.xlabel('Pixel value')
-plt.ylabel('Intensity')
+plt.xlabel('Pixel Value')
+plt.ylabel('Number of Occurences')
 plt.show()   
 
 #%%
@@ -134,27 +134,6 @@ for i in range(size):
 plt.show()
 
 #%%
-#Plot of the brightness of the galaxies
-#Could potentially be modelled throug a 1/x function (Personally would have expected inverse square)
-
-size = len(fixed_catalogue)
-x_values2 = np.linspace(1,size,size,dtype=int)
-y_values2 = np.zeros(size)
-for i in range(0,size):
-    y_values2[i] = fixed_catalogue[i][1]
-    
-def inverse_func(x):
-    return 38000/(x) + 3500
-
-plt.figure()
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Brightness of galaxies')
-plt.scatter(x_values2,y_values2,marker='x')
-plt.plot(x_values2,inverse_func(x_values2))
-plt.show()
-
-#%%
 #Plot the distribution of the local backgrounds
 #compare to the gaussian distribution from before
 
@@ -186,9 +165,6 @@ for i in range(1,size-1):
     Mag_backgound[back_g] = Mag_backgound[back_g] + 1
 
 plt.xlim(3350,3550)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Distribution of the local background')
 plt.scatter(Background,Mag_backgound,marker='x')
 
 
@@ -202,7 +178,8 @@ Gaussian = normal_distribution(mean, standard_dev, x_values)
 Gaussian_scaled = Gaussian*1900
 plt.plot(x_values, Gaussian_scaled,'gx', markersize=2)
 plt.xlabel('Pixel value')
-plt.ylabel('intensity')
+plt.ylabel('Number of Occurences')
+plt.title('Distribution of the Local Background')
 plt.show()     
 
 #%%
@@ -258,8 +235,8 @@ for i in range(0,size-1):
     Mag_rad[radius] = Mag_rad[radius] + 1
     
 plt.xlim(0,20)
-plt.xlabel('Radius in Pixels')
-plt.ylabel('Number of Occurances')
+plt.xlabel('Radius (Pixels)')
+plt.ylabel('Number of Occurences')
 plt.title('Distribution of the Radii')
 plt.xticks([0,4,8,12,16,20])
 #plt.yticks([200,250,300,350])
@@ -305,9 +282,6 @@ for i in range(1,size-1):
     Mag_backgound[back_g] = Mag_backgound[back_g] + 1
 
 plt.xlim(3350,3550)
-plt.xlabel('x')
-plt.ylabel('y')
-plt.title('Distribution of the local background')
 plt.scatter(Background,Mag_backgound,marker='x')
 
 
@@ -321,7 +295,8 @@ Gaussian = normal_distribution(mean, standard_dev, x_values)
 Gaussian_scaled = Gaussian*2700
 plt.plot(x_values, Gaussian_scaled,'gx', markersize=2)
 plt.xlabel('Pixel value')
-plt.ylabel('intensity')
+plt.ylabel('Number of Occurences')
+plt.title('Distribution of the local background')
 plt.show()     
 
 #%% Check for eliptical galaxies
@@ -354,8 +329,8 @@ for i in range(len(diam_dif)):
     
 plt.xlim(1,max_dif)
 plt.xlabel('Difference in Measured Diameter (pixels)')
-plt.ylabel('Number of Occurances')
-plt.title('Plot of the Different in Measured Diameters')
+plt.ylabel('Number of Occurrences')
+plt.title('Plot of the Difference in Measured Diameters')
 plt.scatter(diam_difference,Mag_diam_difference,marker='x')
 plt.show()
 
@@ -372,6 +347,12 @@ variable_magnitude = MAGZPT-(2.5*(np.log10(variable_catalogue[:,4])))        #ch
 variable_unique_mag, variable_counts = np.unique(variable_magnitude, return_counts=True)
 variable_cumulative = np.cumsum(variable_counts)
 variable_log_number = np.log10(variable_cumulative)
+
+#Error analysis
+error_variable_magnitude = (2.5*(np.log10(0.1*variable_catalogue[:,4])))
+error_variable_unique_mag, error_variable_counts = np.unique(error_variable_magnitude, return_counts=True)
+error_variable_cumulative = np.cumsum(error_variable_counts)
+error_variable_log_number = np.log10(error_variable_cumulative)
 
 #The first 3 entries are wrong, could delete here or at the beginning when filtering data
 #initial_index = [0,1,2]
@@ -392,8 +373,8 @@ print('Slope = %.3e' %(theoretical_slope))# Note the %.3e forces the values to b
 print('Intercept = %.3e' %(theoretical_yintercept))
 print()
 
-yerror1 = 0.5/final_variable_log_number
-errors1 = 0.5/mod_variable_log_number
+yerror1 = 1.0/error_variable_log_number
+errors1 = 1.0/mod_variable_log_number
 
 fit1,cov1 = np.polyfit(mod_variable_unique_mag,mod_variable_log_number,1,w=1/errors1,cov=True)
 
@@ -414,7 +395,7 @@ plt.plot(mod_variable_unique_mag, linear_func(mod_variable_unique_mag,theoretica
 plt.xlim(7,21)
 plt.ylim(-2,7)
 plt.xlabel('Magnitude')
-plt.ylabel('Log(Count)')
+plt.ylabel('Log10(Count)')
 plt.title('Number Count Plot using the Variable Aperture Method')
 #plt.xticks([200,250,300,350])
 #plt.yticks([200,250,300,350])
@@ -438,6 +419,13 @@ fixed_unique_mag, fixed_counts = np.unique(fixed_magnitude, return_counts=True)
 fixed_cumulative = np.cumsum(fixed_counts)
 fixed_log_number = np.log10(fixed_cumulative)
 
+#Error analysis
+error_fixed_magnitude = (2.5*(np.log10(0.1*fixed_catalogue[:,4])))
+error_fixed_unique_mag, error_fixed_counts = np.unique(error_fixed_magnitude, return_counts=True)
+error_fixed_cumulative = np.cumsum(error_fixed_counts)
+error_fixed_log_number = np.log10(error_fixed_cumulative)
+
+
 #The first 3 entries are wrong, could delete here or at the beginning when filtering data
 #initial_index = [0,1,2]
 initial_index = []
@@ -457,8 +445,8 @@ print('Slope = %.3e' %(theoretical_slope))# Note the %.3e forces the values to b
 print('Intercept = %.3e' %(theoretical_yintercept))
 print()
 
-yerror2 = 0.5/final_fixed_log_number
-errors2 = 0.5/mod_fixed_log_number
+yerror2 = 1.0/(error_fixed_log_number)  #Error of the number counts
+errors2 = 1.0/mod_fixed_log_number      #Error weightings for linear fit
 
 fit2,cov2 = np.polyfit(mod_fixed_unique_mag,mod_fixed_log_number,1,w=1/errors2,cov=True)
 
@@ -479,7 +467,7 @@ plt.plot(mod_fixed_unique_mag, linear_func(mod_fixed_unique_mag,theoretical_slop
 plt.xlim(7,21)
 plt.ylim(-2,7)
 plt.xlabel('Magnitude')
-plt.ylabel('Log(Count)')
+plt.ylabel('Log10(Count)')
 plt.title('Number Count Plot using the Fixed Aperture Method')
 #plt.xticks([200,250,300,350])
 #plt.yticks([200,250,300,350])
@@ -498,7 +486,6 @@ x_values = np.linspace(3380,3480,100000,dtype=int)
 Gaussian1 = normal_distribution(mean, standard_dev, x_values)
 plt.plot(x_values, Gaussian1,'rx', markersize=2,label="Global Error")
 
-
 mean = 3419
 standard_dev = 6
 
@@ -516,7 +503,8 @@ plt.plot(x_values, Gaussian3,'gx', markersize=2,label="Fixed Local Error")
 
 plt.xlim(3380,3480)
 plt.xlabel('Pixel value')
-plt.ylabel('Intensity')
+plt.ylabel('Number of Occurences')
+plt.title('Comparison of the Background Error Distributions')
 plt.legend()
 plt.show()   
 

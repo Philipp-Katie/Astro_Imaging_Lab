@@ -91,8 +91,8 @@ for i in range(0,size):
 #plt.figure()
 plt.axis('equal')
 plt.xlim(0,2600)
-plt.xlabel('X')
-plt.ylabel('Y')
+plt.xlabel('x')
+plt.ylabel('y')
 plt.title('Locations of Detected Galaxies')
 for i in range(size):
     plt.scatter(fake_x_coordinates[i],fake_y_coordinates[i],c='b',marker='o',s=int(15*fake_radius[i]**2))
@@ -144,8 +144,8 @@ for i in range(0,size):
 #plt.figure()
 plt.axis('equal')
 plt.xlim(0,2600)
-plt.xlabel('X')
-plt.ylabel('Y')
+plt.xlabel('x')
+plt.ylabel('y')
 plt.title('Locations of Detected Galaxies')
 for i in range(size):
     plt.scatter(fake_x_coordinates[i],fake_y_coordinates[i],c='b',marker='o',s=int(15*fake_radius[i]**2))
@@ -197,8 +197,8 @@ for i in range(0,size):
 #plt.figure()
 plt.axis('equal')
 plt.xlim(0,2600)
-plt.xlabel('X')
-plt.ylabel('Y')
+plt.xlabel('x')
+plt.ylabel('y')
 plt.title('Locations of Detected Galaxies')
 for i in range(size):
     plt.scatter(fake_x_coordinates[i],fake_y_coordinates[i],c='b',marker='o',s=int(15*fake_radius[i]**2))
